@@ -1,0 +1,130 @@
+<!doctype html>
+<html ng-app="AWSConsoleHelper" ng-csp>
+<head>
+    <title>AWS Console Helper</title>
+    <link href="css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="css/vendor/bootstrap-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="js/vendor/angular.js"></script>
+    <script src="js/popup.js"></script>
+</head>
+<body>
+<div ng-controller="HelperController" class="container" style="width:800px;">
+    <button style="position:fixed;right:10px;top:10px;" class="pull-right btn btn-primary" ng-if="!editing" ng-click="toggleEdit()">Edit</button>
+    <button style="position:fixed;right:10px;top:10px;" class="pull-right btn btn-success" ng-if="editing" ng-click="toggleEdit()">Done</button>
+    <h2 class="text-center">AWS Account Switcher</h2>
+
+    <div class="row" ng-if="!showSettings && editing" style="margin-bottom:10px;">
+        <div class="col-xs-4">
+            <div>
+                <div class="input-group" style="width:100%">
+                    <input type="text" class="form-control" placeholder="AWS Account Name" id="new_account_id">
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Nickname (optional)" id="new_account_name">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" ng-click="addAccount()" type="button">+</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div ng-if="editing" class="btn-group" style="width:100%">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false" style="width:100%">
+                    Add a region <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="region in regions"
+                        ng-if="!region.favorite"
+                        ng-click="selectRegion(region)"
+                    >
+                        <a href="#">{{ region.name }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div ng-if="editing">
+                <div class="input-group"  style="width:100%">
+                    <input type="text" class="form-control" placeholder="IAM Role Name" id="new_role_id">
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Nickname (optional)" id="new_role_name">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="addRole()" type="button">+</button>
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" ng-if="!showSettings">
+        <div class="col-xs-4">
+          <div class="list-group">
+              <div
+                      class="list-group-item"
+                      ng-click="setAccount(account)"
+                      ng-repeat="account in accounts track by account.id"
+
+                      ng-class="{
+                          'list-group-item': state.account == account.id,
+                          'list-group-item-success': next.account.id == account.id
+                        }"
+              >{{ account.name }}
+                  <a class="pull-right btn btn-xs btn-default"
+                     ng-click="deleteAccount(account);  $event.stopPropagation();" ng-if="editing">X</a>
+              </div>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="list-group">
+              <div
+                      class="list-group-item"
+                      ng-click="selectRegion(region)"
+                      ng-repeat="region in regions"
+                      ng-if="region.favorite"
+                      ng-class="{
+                          'list-group-item': state.region == region.id,
+                          'list-group-item-success': next.region.id == region.id}"
+              >{{ region.name }}
+                  <a class="pull-right btn btn-xs btn-default"
+                     ng-click="unfavorite(region);  $event.stopPropagation();" ng-if="editing">X</a>
+              </div>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="list-group">
+              <div
+                      class="list-group-item"
+                      ng-click="setRole(role)"
+                      ng-repeat="role in roles track by role.id"
+                      ng-class="{
+                          'list-group-item': state.role == role.id,
+                          'list-group-item-success': next.role.id == role.id}"
+              >{{role.name}}
+                  <a class="pull-right btn btn-xs btn-default" ng-if="editing"
+                     ng-click="deleteRole(role);  $event.stopPropagation();">X</a>
+              </div>
+          </div>
+        </div>
+    </div>
+    <!--<div>-->
+        <!--<a ng-repeat="c in colors" class="btn btn-sm" ng-class="c.background" ng-click="color=c">&nbsp;</a>-->
+    <!--</div>-->
+    <div class="row">
+        <div class="col-xs-12">
+            <button class="pull-right btn btn-success" ng-if="!editing" ng-click="switchRole()">Switch</button>
+            <button class="btn btn-danger" ng-if="editing" ng-click="clearConfig()">Reset configuration</button>
+        </div>
+    </div>
+    &nbsp; <!-- add space at the bottom of the window -->
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/vendor/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/vendor/bootstrap.min.js"></script>
+</body>
+</html>
