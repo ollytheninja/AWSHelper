@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "AWS Helper",
-    "version": "0.2.7",
+    "version": "0.2.8",
     "author": "Oliver Ewert <oliver@ewert.co.nz>",
     "icons": {"128":"img/aws.png"},
     "description": "Extension to help with using AWS Console",
@@ -10,10 +10,7 @@
         "default_popup": "popup.html"
     },
     "permissions": [
-        "cookies",
         "https://*.aws.amazon.com/*",
-        "storage",
-        "activeTab",
-        "tabs"
+        "storage"
     ]
 }
