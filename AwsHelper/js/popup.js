@@ -242,7 +242,6 @@ app = angular.module('AWSConsoleHelper', [])
 
         $scope.clearConfig = function(){
           chrome.storage.local.remove('awsHelper_settings', function(ev){
-            console.log(ev);
             loadConfig();
           });
         }
@@ -252,56 +251,17 @@ app = angular.module('AWSConsoleHelper', [])
             chrome.tabs.executeScript(tab.id,
                 {file: "js/content_script.js"},
                 function (result) {
-                    csrfToken = result[0];
+                    if(result){
+                        csrfToken = result[0];
+                    }
                 });
-            chrome.cookies.getAll({"url": tab.url}, function (cookies) {
-                var newcookies = [];
-                newcookies.push.apply($scope.cookies);
-                for (var k in cookies) {
-                    var cookie = cookies[k];
-                    newcookies[cookie.name] = cookie;
-                    if (cookie.name === "noflush_awsc-roleInfo") {
-                        obj = JSON.parse(decodeURIComponent(cookie.value));
-                        $scope.state.role = obj.rl[0].r;
-                        $scope.state.account = obj.rl[0].a;
-                        $scope.state.username = obj.bn;
+            chrome.tabs.executeScript(tab.id,
+                {file: "js/content_script.js"},
+                function (result) {
+                    if(result){
+                        csrfToken = result[0];
                     }
-                    if (cookie.name === "noflush_Region") {
-                        obj = cookie.value;
-                        $scope.state.region = obj;
-                    }
-                }
-
-                for (var account in $scope.accounts) {
-                    if (account.id == $scope.state.account) {
-                        $scope.next.account = accounts;
-                    } else {
-                        $scope.next.account.id = $scope.state.account;
-                        $scope.next.account.name = $scope.state.account;
-                    }
-                }
-
-                for (var region in $scope.regions) {
-                    if (region.id == $scope.state.region) {
-                        $scope.next.region = regions;
-                    } else {
-                        $scope.next.region.id = $scope.state.region;
-                        $scope.next.region.name = $scope.state.region;
-                    }
-                }
-
-                for (var role in $scope.roles) {
-                    if (role.id == $scope.state.role) {
-                        $scope.next.role = roles;
-                    } else {
-                        $scope.next.role.id = $scope.state.role;
-                        $scope.next.role.name = $scope.state.role;
-                    }
-                }
-
-                $scope.cookies = newcookies;
-                $scope.$apply();
-            });
+                });
         });
 
         // Get settings
@@ -318,8 +278,6 @@ app = angular.module('AWSConsoleHelper', [])
               awsHelper_settings: JSON.stringify(defaults)
           }, function (result) {
               settings = JSON.parse(result.awsHelper_settings);
-
-              console.log(settings)
 
               // Show edit view on first run
               if (settings.firstrun == true){
@@ -372,7 +330,6 @@ app = angular.module('AWSConsoleHelper', [])
     });
 
 function executeOnCurrentPage(config, script) {
-    console.log(config);
     chrome.tabs.getSelected(null, function (tab) {
         // to load parameters
         chrome.tabs.executeScript(tab.id, {
