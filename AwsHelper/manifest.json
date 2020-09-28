@@ -12,5 +12,12 @@
     "permissions": [
         "https://*.aws.amazon.com/*",
         "storage"
+    ],
+    "content_scripts": [
+        {
+            "run_at" : "document_idle",
+            "matches":["https://*.console.aws.amazon.com/*"],
+            "js":["js/remove_useless_content_script.js"]
+        }
     ]
 }

@@ -255,13 +255,6 @@ app = angular.module('AWSConsoleHelper', [])
                         csrfToken = result[0];
                     }
                 });
-            chrome.tabs.executeScript(tab.id,
-                {file: "js/content_script.js"},
-                function (result) {
-                    if(result){
-                        csrfToken = result[0];
-                    }
-                });
         });
 
         // Get settings
